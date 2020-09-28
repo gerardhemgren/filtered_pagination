@@ -49,8 +49,6 @@
         let pages = []; // Array to put object with PageNumber and Items splited
 
         // Create page
-        let buttonsCreated = false;
-        function loop() {
             
             for (let pageNumber = 1; pageNumber < (pageSplit + 1); pageNumber++) { // (+ 1): Catchs leftovers items and add a page
                 obj = { pageNumber: pageNumber, items: [] }; // HERE IS THE TRICK (creates an object to put into an array to link (with pageNumber (id)) in every listener)
@@ -79,7 +77,6 @@
                 }
                 renderItems();
 
-                if (!buttonsCreated) {
                 let button;
                     button = document.createElement('button'); // Creates and assign button according page,   
                     button.innerHTML = pages[pageNumber - 1].pageNumber; // -1 to acces the index 0
@@ -88,16 +85,8 @@
                         renderItems();
                     })
                     div.appendChild(button);
-                }
             }
-        }
-        loop();
-        buttonsCreated = true;
 
-        function sort() {
-            array.sort(function (a, b) { return a - b });
-            loop();
-        }
     </script>
 </body>
 
