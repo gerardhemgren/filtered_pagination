@@ -61,21 +61,26 @@
         function sortAscending() {
             array.sort(function (a, b) { return a - b });
             loop();
+            renderItems();
+            buttons();
         }
         function sortDescending() {
             array.sort(function (a, b) { return b - a });
             loop();
+            renderItems();
+            buttons();
         }
 
         // Create page
-        let buttonsCreated = false;
         let pages;
         let pageItems;
+        let pageNumber;
+        let obj;
         function loop() {
             let startInterval = 0;
             let endInterval = interval;
             pages = []; // Array to put object with PageNumber and Items splited
-            for (let pageNumber = 1; pageNumber < (pageSplit + 1); pageNumber++) { // (+ 1): Catchs leftovers items and add a page
+            for (pageNumber = 1; pageNumber < (pageSplit + 1); pageNumber++) { // (+ 1): Catchs leftovers items and add a page
                 obj = { pageNumber: pageNumber, items: [] }; // HERE IS THE TRICK (creates an object to put into an array to link (with pageNumber (id)) in every listener)
                 pages.push(obj);
 
@@ -85,37 +90,48 @@
                     obj.items.push(array[startInterval]); // Pushs the looped items
                 }
                 endInterval += interval; // Updates endInterval
-
-                let domStart = pages[0].items; // Render first page
-                pageItems = domStart;
-                let domButton = pages[pageNumber - 1].items; // Separate items according to that page (on click)
-
-                function renderItems() {
-                    let itemsDiv = document.createElement('div');
-                    for (item in pageItems) {
-                        let eachItem = document.createElement('div');
-                        eachItem.innerHTML = pageItems[item];
-                        itemsDiv.appendChild(eachItem);
-                    }
-                    showItems.innerHTML = ''; // Resets showItems
-                    showItems.appendChild(itemsDiv);
-                }
-                renderItems();
-
-                if (!buttonsCreated) {
-                    let button;
-                    button = document.createElement('button'); // Creates and assign button according page,   
-                    button.innerHTML = pages[pageNumber - 1].pageNumber; // -1 to acces the index 0
-                    button.addEventListener('click', function () {
-                        pageItems = domButton;
-                        renderItems();
-                    })
-                    div.appendChild(button);
-                }
             }
         }
         loop();
-        buttonsCreated = true;
+
+
+        
+        function renderItems() {
+            for (pageNumber = 1; pageNumber < (pageSplit + 1); pageNumber++) {
+                let domStart = pages[0].items; // Render first page
+                pageItems = domStart;
+                // pageItems = pages[pageNumber - 1].items;
+                let domButton = pages[pageNumber - 1].items; // Separate items according to that page (on click)
+                let itemsDiv = document.createElement('div');
+                for (item in pageItems) {
+                    let eachItem = document.createElement('div');
+                    eachItem.innerHTML = pageItems[item];
+                    itemsDiv.appendChild(eachItem);
+                }
+                showItems.innerHTML = ''; // Resets showItems
+                showItems.appendChild(itemsDiv);
+            }
+        }
+        renderItems();
+
+        function buttons() {
+            div.innerHTML = '';
+            for (pageNumber = 1; pageNumber < (pageSplit + 1); pageNumber++) {
+                // let domStart = pages[0].items; // Render first page
+                // pageItems = domStart;
+                let domButton = pages[pageNumber - 1].items; // Separate items according to that page (on click)
+
+                let button;
+                button = document.createElement('button'); // Creates and assign button according page,   
+                button.innerHTML = pages[pageNumber - 1].pageNumber; // -1 to acces the index 0
+                button.addEventListener('click', function () {
+                    pageItems = domButton;
+                    renderItems();
+                })
+                div.appendChild(button);
+            }
+        }
+        buttons();
     </script>
 </body>
 
