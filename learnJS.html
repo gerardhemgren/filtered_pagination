@@ -58,15 +58,18 @@
         // Pages from intervals
         const pageSplit = Math.ceil(array.length / interval); // Split items in pages according interval
 
+        let buttonAssigend = false;
         function sortAscending() {
             array.sort(function (a, b) { return a - b });
             loop();
+            buttonAssigend = false;
             renderItems();
             buttons();
         }
         function sortDescending() {
             array.sort(function (a, b) { return b - a });
             loop();
+            buttonAssigend = false;
             renderItems();
             buttons();
         }
@@ -94,13 +97,12 @@
         }
         loop();
 
-
-        
         function renderItems() {
             for (pageNumber = 1; pageNumber < (pageSplit + 1); pageNumber++) {
                 let domStart = pages[0].items; // Render first page
-                pageItems = domStart;
-                // pageItems = pages[pageNumber - 1].items;
+                if (!buttonAssigend) {
+                    pageItems = domStart;
+                }
                 let domButton = pages[pageNumber - 1].items; // Separate items according to that page (on click)
                 let itemsDiv = document.createElement('div');
                 for (item in pageItems) {
@@ -117,8 +119,6 @@
         function buttons() {
             div.innerHTML = '';
             for (pageNumber = 1; pageNumber < (pageSplit + 1); pageNumber++) {
-                // let domStart = pages[0].items; // Render first page
-                // pageItems = domStart;
                 let domButton = pages[pageNumber - 1].items; // Separate items according to that page (on click)
 
                 let button;
@@ -126,6 +126,7 @@
                 button.innerHTML = pages[pageNumber - 1].pageNumber; // -1 to acces the index 0
                 button.addEventListener('click', function () {
                     pageItems = domButton;
+                    buttonAssigend = true;
                     renderItems();
                 })
                 div.appendChild(button);
