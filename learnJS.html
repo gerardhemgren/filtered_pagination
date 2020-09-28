@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en" style="height: 100%;">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>learnJS</title>
+    <style>
+        body {
+            background-color: rgb(30, 30, 60);
+            color: white;
+            font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+        }
+    </style>
+</head>
+
+<body id="body"
+    style="display: flex; flex-direction: column; justify-content: space-between; align-items: center; margin-top: 10px; padding: 0; height: 85%;">
+    <div>
+        <div id="itemsNumber" style="font-size: 55px;"></div>
+        <div id="intervalNumber" style="font-size: 55px;"></div>
+    </div>
+
+    <div id="show-items"></div>
+    <div id="div"></div>
+
+    <script>
+        // HTML
+        const div = document.getElementById('div');
+        const showItems = document.getElementById('show-items');
+
+        // Array and Interval
+        const interval = Math.floor(Math.random() * 10) + 12;
+        const items = Math.floor(Math.random() * 100) + 1;
+        const itemsNumber = document.getElementById('itemsNumber');
+        itemsNumber.innerHTML = `Items: ${items}`;
+        const intervalNumber = document.getElementById('intervalNumber');
+        intervalNumber.innerHTML = `Interval: ${interval}`;
+
+        const array = []; // Array to put items
+        for (i = 0; i < items; i++) {
+            array.push(`${(i * Math.floor(Math.random() * 10) + 1)}`); // Push in Array a random items
+        }
+        let startInterval = 0;
+        let endInterval = interval;
+
+        // Pages from intervals
+        const pageSplit = Math.ceil(array.length / interval); // Split items in pages according interval
+        let pages = []; // Array to put object with PageNumber and Items splited
+
+        // Create page
+        let buttonsCreated = false;
+        function loop() {
+            
+            for (let pageNumber = 1; pageNumber < (pageSplit + 1); pageNumber++) { // (+ 1): Catchs leftovers items and add a page
+                obj = { pageNumber: pageNumber, items: [] }; // HERE IS THE TRICK (creates an object to put into an array to link (with pageNumber (id)) in every listener)
+                pages.push(obj);
+
+                // For every page created: adds the items splitted
+                for (; startInterval < endInterval; startInterval++) { // Complets the loop according interval
+                    if (startInterval == array.length) { break; }
+                    obj.items.push(array[startInterval]); // Pushs the looped items
+                }
+                endInterval += interval; // Updates endInterval
+
+                let domStart = pages[0].items; // Render first page
+                let pageItems = domStart;
+                let domButton = pages[pageNumber - 1].items; // Separate items according to that page (on click)
+
+                function renderItems() {
+                    let itemsDiv = document.createElement('div');
+                    for (item in pageItems) {
+                        let eachItem = document.createElement('div');
+                        eachItem.innerHTML = pageItems[item];
+                        itemsDiv.appendChild(eachItem);
+                    }
+                    showItems.innerHTML = ''; // Resets showItems
+                    showItems.appendChild(itemsDiv);
+                }
+                renderItems();
+
+                if (!buttonsCreated) {
+                let button;
+                    button = document.createElement('button'); // Creates and assign button according page,   
+                    button.innerHTML = pages[pageNumber - 1].pageNumber; // -1 to acces the index 0
+                    button.addEventListener('click', function () {
+                        pageItems = domButton;
+                        renderItems();
+                    })
+                    div.appendChild(button);
+                }
+            }
+        }
+        loop();
+        buttonsCreated = true;
+
+        function sort() {
+            array.sort(function (a, b) { return a - b });
+            loop();
+        }
+    </script>
+</body>
+
+</html>
