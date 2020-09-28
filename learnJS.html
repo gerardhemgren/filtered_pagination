@@ -30,28 +30,51 @@
         const showItems = document.getElementById('show-items');
 
         // Array and Interval
-        const interval = Math.floor(Math.random() * 10) + 12;
-        const items = Math.floor(Math.random() * 100) + 1;
+
         const itemsNumber = document.getElementById('itemsNumber');
-        itemsNumber.innerHTML = `Items: ${items}`;
         const intervalNumber = document.getElementById('intervalNumber');
+
+        let array;
+        let interval;
+        let items;
+
+        let start = true;
+        if (true) {
+            array = []; // Array to put items
+            interval = Math.floor(Math.random() * 10) + 12;
+            items = Math.floor(Math.random() * 100) + 1;
+            for (i = 0; i < items; i++) {
+                array.push(`${(i * Math.floor(Math.random() * 10) + 1)}`); // Push in Array a random items
+            }
+        }
+        start = false;
+
+        itemsNumber.innerHTML = `Items: ${items}`;
         intervalNumber.innerHTML = `Interval: ${interval}`;
 
-        const array = []; // Array to put items
-        for (i = 0; i < items; i++) {
-            array.push(`${(i * Math.floor(Math.random() * 10) + 1)}`); // Push in Array a random items
-        }
         let startInterval = 0;
         let endInterval = interval;
 
         // Pages from intervals
         const pageSplit = Math.ceil(array.length / interval); // Split items in pages according interval
-        let pages = []; // Array to put object with PageNumber and Items splited
+
+        function sortAscending() {
+            array.sort(function (a, b) { return a - b });
+            loop();
+        }
+        function sortDescending() {
+            array.sort(function (a, b) { return b - a });
+            loop();
+        }
 
         // Create page
         let buttonsCreated = false;
+        let pages;
+        let pageItems;
         function loop() {
-            
+            let startInterval = 0;
+            let endInterval = interval;
+            pages = []; // Array to put object with PageNumber and Items splited
             for (let pageNumber = 1; pageNumber < (pageSplit + 1); pageNumber++) { // (+ 1): Catchs leftovers items and add a page
                 obj = { pageNumber: pageNumber, items: [] }; // HERE IS THE TRICK (creates an object to put into an array to link (with pageNumber (id)) in every listener)
                 pages.push(obj);
@@ -64,7 +87,7 @@
                 endInterval += interval; // Updates endInterval
 
                 let domStart = pages[0].items; // Render first page
-                let pageItems = domStart;
+                pageItems = domStart;
                 let domButton = pages[pageNumber - 1].items; // Separate items according to that page (on click)
 
                 function renderItems() {
@@ -80,7 +103,7 @@
                 renderItems();
 
                 if (!buttonsCreated) {
-                let button;
+                    let button;
                     button = document.createElement('button'); // Creates and assign button according page,   
                     button.innerHTML = pages[pageNumber - 1].pageNumber; // -1 to acces the index 0
                     button.addEventListener('click', function () {
@@ -93,11 +116,6 @@
         }
         loop();
         buttonsCreated = true;
-
-        function sort() {
-            array.sort(function (a, b) { return a - b });
-            loop();
-        }
     </script>
 </body>
 
