@@ -14,13 +14,12 @@
     </style>
 </head>
 
-<body id="body"
-    style="display: flex; flex-direction: column; justify-content: space-between; align-items: center; margin-top: 10px; padding: 0; height: 90%;">
-    <div>
+<body id="body" style="display: flex;  margin-top: 10px; padding: 0 40px;">
+    <div style="padding-right: 100px;">
         <div id="itemsNumber" style="font-size: 55px;"></div>
         <div id="intervalNumber" style="font-size: 55px;"></div>
-        <div>
-            <h2>Ordenar</h1>
+        <div >
+            <p>Ordenar</p>
                 <div style="display: flex;">
                     <div id="ascending">
                         <button id="ascending" onclick="sortAscending()">Ascendente</button>
@@ -31,9 +30,11 @@
                 </div>
         </div>
     </div>
+    <div style="display: flex; flex-direction: column; justify-content: space-between;">
+        <div id="show-items"></div>
+        <div id="divButton" style="padding-top: 20px;"></div>
+    </div>
 
-    <div id="show-items"></div>
-    <div id="divButton"></div>
     <script>
         // HTML
         const showItems = document.getElementById('show-items');
@@ -51,7 +52,7 @@
         let start = true;
         if (true) {
             array = []; // Array to put items
-            interval = Math.floor(Math.random() * 10) + 5;
+            interval = Math.floor(Math.random() * 10) + 15;
             items = Math.floor(Math.random() * 100) + 1;
             for (i = 0; i < items; i++) {
                 array.push(`${(i * Math.floor(Math.random() * 10) + 1)}`); // Push in Array a random items
