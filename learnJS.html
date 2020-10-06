@@ -19,14 +19,16 @@
         <div id="itemsNumber" style="font-size: 55px;"></div>
         <div id="intervalNumber" style="font-size: 55px;"></div>
         <div>
+            <p>Filtrar</p>
+            <button id='filter' onclick="filter()">Pares</button>
             <p>Ordenar</p>
             <div style="display: flex;">
                 <div id="ascending">
                     <button id="ascending" onclick="sortAscending()">Ascendente</button>
                 </div>
-                <div id="descending">
+<!--                 <div id="descending">
                     <button id="descending" onclick="sortDescending()">Descendente</button>
-                </div>
+                </div> -->
             </div>
         </div>
     </div>
@@ -37,90 +39,111 @@
 
     <script>
 
-        // CREATED
+        // CREATED (Array: [{item & condition]})
         const showItems = document.getElementById('show-items');
         const divButton = document.getElementById('divButton');
         const itemsNumber = document.getElementById('itemsNumber');
         const intervalNumber = document.getElementById('intervalNumber');
 
-        let array = []; // Array to put items;
-        let items = Math.floor(Math.random() * 100) + 1;
-        let interval = Math.floor(Math.random() * 10) + 15;
-        for (i = 0; i < items; i++) {
-            array.push(`${(i * Math.floor(Math.random() * 10) + 1)}`); // Push in Array a random items
-        }
+        const array = []; // Array to put items;
+        const items = Math.floor(Math.random() * 100) + 1;
+        const interval = Math.floor(Math.random() * 10) + 15;
 
+        for (i = 0; i < items; i++) {
+            const arrayBody = { item: `${(i * Math.floor(Math.random() * 10) + 1)}`, condition: false };
+            if (arrayBody.item % 2 == 0) {
+                arrayBody.condition = true;
+            }
+            array.push(arrayBody);
+        }
         itemsNumber.innerHTML = `Items: ${items}`;
         intervalNumber.innerHTML = `Intervalo: ${interval}`;
 
-        let startPoint = 0;
-        let endPoint = interval;
-
-        const pageSplit = Math.ceil(array.length / interval); // Split items in pages according interval
-        let pageArray;
-        let itemsPageArray;
-        function splitPageArray() {
-            // Refresh pageArray (COMPUTED)
-            startPoint = 0;
-            endPoint = interval;
-            pageArray = []
-            //
-            for (let pageN = 1; pageN < pageSplit + 1; pageN++) {
-                let pageBody = { pageNumber: pageN, items: [] };
-                pageArray.push(pageBody);
-                for (; startPoint < endPoint; startPoint++) {
-                    if (startPoint == array.length) { break; }
-                    pageBody.items.push(array[startPoint])
-                }
-                endPoint += interval;
-            }
-            // Refresh itemsPageArray (COMPUTED)
-            itemsPageArray = pageArray[0].items;
-            //
-            createButtons();
-        }
-        splitPageArray();
-
-        // METHODS
-        function sortAscending() {
-            array.sort(function (a, b) { return a - b });
-            splitPageArray();
-        }
-        function sortDescending() {
-            array.sort(function (a, b) { return b - a });
-            splitPageArray();
-        }
-
-        let buttonsCreated = false;
-        function createButtons() {
-            divButton.innerHTML = '';
-            for (let pageN = 1; pageN < pageSplit + 1; pageN++) {
-                let selfButton = pageArray[pageN - 1].items; // Separate items according to that page (on click)
-
-                let button;
-                button = document.createElement('button'); // Creates and assign button according page,   
-                button.innerHTML = pageArray[pageN - 1].pageNumber; // -1 to acces the index 0
-                button.addEventListener('click', function () {
-                    itemsPageArray = selfButton;
-                    buttonAssigend = true;
-                    renderItems();
+        ///////////////////////
+        // FilterArray
+        let arrayFiltered = array;
+        function filter() {
+            conditionA = true;
+            function filterArray(a = conditionA) {
+                return array.filter(c => {
+                    return c.condition === a;
                 })
-                divButton.appendChild(button);
-                
-                renderItems();
             }
+            arrayFiltered = filterArray();
+            splitInPages();
+            renderItems();
         }
 
-        function renderItems() {
-            let itemsDiv = document.createElement('div');
-            for (item in itemsPageArray) {
-                let eachItem = document.createElement('div');
-                eachItem.innerHTML = itemsPageArray[item];
-                itemsDiv.appendChild(eachItem);
-            }
-            showItems.innerHTML = ''; // Resets showItems
-            showItems.appendChild(itemsDiv);
+        ///////////////////////
+        // SortArray
+        function sortAscending() {
+            arrayFiltered.sort(function (a, b) {
+                const itemA = a.item;
+                const itemB = b.item;
+                return itemA - itemB
+            });
+            divButton.innerHTML = '';
+            splitInPages();
+            renderItems();
         }
+
+        ///////////////////////
+        // PageSplit
+        let arrayFilteredInPages = [];
+        function splitInPages() {
+            // refresh
+            let pageSplit = Math.ceil(arrayFiltered.length / interval);
+            arrayFilteredInPages = [];
+            firstPoint = 0;
+            lastPoint = interval;
+            divButton.innerHTML = '';
+            //////////
+            for (let pageN = 0; pageN < pageSplit; pageN++) {
+                let pageBody = { pageNumber: (pageN + 1), items: [] };
+                arrayFilteredInPages.push(pageBody);
+                for (; firstPoint < lastPoint; firstPoint++) {
+                    if (firstPoint == arrayFiltered.length) { break; }
+                    const itemBody = { item: '', condition: '' };
+                    itemBody.item = arrayFiltered[firstPoint].item;
+                    itemBody.condition = arrayFiltered[firstPoint].condition;
+                    pageBody.items.push(itemBody);
+                }
+                lastPoint += interval;
+                createButton(arrayFilteredInPages[pageN].pageNumber);
+            }
+        }
+        splitInPages();
+
+        ///////////////////////
+        // Creates Buttons
+        function createButton(pageNumber) {
+            const button = document.createElement('button');
+            button.innerHTML = pageNumber;
+            button.addEventListener('click', function () {
+                renderItems(pageNumber)
+            })
+            divButton.appendChild(button);
+        }
+
+        ///////////////////////
+        // Renders Items
+        function renderItems(pageNumber) {
+            if (!pageNumber) {
+                renderPageNumber = 1;
+            } else {
+                renderPageNumber = pageNumber;
+            }
+            showItems.innerHTML = '';
+            const items = document.createElement('div');
+            let currentPage = arrayFilteredInPages[renderPageNumber - 1].items;
+            for (i in currentPage) {
+                const eachItem = document.createElement('div');
+                eachItem.innerHTML = currentPage[i].item;
+                items.appendChild(eachItem);
+            }
+            showItems.appendChild(items);
+        }
+        renderItems();
 
     </script>
 </body>
