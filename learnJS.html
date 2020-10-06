@@ -20,7 +20,9 @@
         <div id="intervalNumber" style="font-size: 55px;"></div>
         <div>
             <p>Filtrar</p>
-            <button id='filter' onclick="filter()">Pares</button>
+            <button id='filter' onclick="filter(true)">Pares</button>
+            <button id='filter' onclick="filter(false)">Impares</button>
+            <button id='filter' onclick="filter('all')">Todos</button>
             <p>Ordenar</p>
             <div style="display: flex;">
                 <div id="ascending">
@@ -62,14 +64,21 @@
         ///////////////////////
         // FilterArray
         let arrayFiltered = array;
-        function filter() {
-            conditionA = true;
-            function filterArray(a = conditionA) {
-                return array.filter(c => {
-                    return c.condition === a;
-                })
+        function filter(filterParam) {
+            arrayFiltered = array;
+            if (typeof (filterParam) != 'string') {
+                function filterArray() {
+                    return array.filter(c => {
+                        if (filterParam) {
+                            return c.condition === true;
+                        }
+                        else {
+                            return c.condition === false;
+                        }
+                    })
+                }
+                arrayFiltered = filterArray();
             }
-            arrayFiltered = filterArray();
             splitInPages();
             renderItems();
         }
