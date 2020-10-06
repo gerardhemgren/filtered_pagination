@@ -24,11 +24,11 @@
             <p>Ordenar</p>
             <div style="display: flex;">
                 <div id="ascending">
-                    <button id="ascending" onclick="sortAscending()">Ascendente</button>
+                    <button id="ascending" onclick="sortArray(true)">Ascendente</button>
                 </div>
-<!--                 <div id="descending">
-                    <button id="descending" onclick="sortDescending()">Descendente</button>
-                </div> -->
+                <div id="descending">
+                    <button id="descending" onclick="sortArray(false)">Descendente</button>
+                </div>
             </div>
         </div>
     </div>
@@ -76,11 +76,16 @@
 
         ///////////////////////
         // SortArray
-        function sortAscending() {
+        function sortArray(clickCondition) {
             arrayFiltered.sort(function (a, b) {
                 const itemA = a.item;
                 const itemB = b.item;
-                return itemA - itemB
+                const sortSwitch = clickCondition;
+                if (sortSwitch) {
+                    return itemA - itemB
+                } else {
+                    return itemB - itemA
+                }
             });
             divButton.innerHTML = '';
             splitInPages();
