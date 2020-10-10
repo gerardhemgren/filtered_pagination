@@ -20,16 +20,16 @@
         <div id="intervalNumber" style="font-size: 55px;"></div>
         <div>
             <p>Filtrar</p>
-            <button id='filter' onclick="filter(true)">Pares</button>
-            <button id='filter' onclick="filter(false)">Impares</button>
+            <button id='filter' onclick="filter('even')">Pares</button>
+            <button id='filter' onclick="filter('odd')">Impares</button>
             <button id='filter' onclick="filter('all')">Todos</button>
             <p>Ordenar</p>
             <div style="display: flex;">
                 <div id="ascending">
-                    <button id="ascending" onclick="sortArray(true)">Ascendente</button>
+                    <button id="ascending" onclick="sortArray('asc')">Ascendente</button>
                 </div>
                 <div id="descending">
-                    <button id="descending" onclick="sortArray(false)">Descendente</button>
+                    <button id="descending" onclick="sortArray('desc')">Descendente</button>
                 </div>
             </div>
         </div>
@@ -66,37 +66,42 @@
         let arrayFiltered = array;
         function filter(filterParam) {
             arrayFiltered = array;
-            if (typeof (filterParam) != 'string') {
-                function filterArray() {
-                    return array.filter(c => {
-                        if (filterParam) {
-                            return c.condition === true;
-                        }
-                        else {
-                            return c.condition === false;
-                        }
-                    })
-                }
-                arrayFiltered = filterArray();
+            sortArray(localStorage.getItem('sort-condition'));
+            function filterArray() {
+                return array.filter(c => {
+                    if (filterParam == 'even') {
+                        return c.condition === true;
+                    }
+                    else if (filterParam == 'odd') {
+                        return c.condition === false;
+                    } else if (filterParam == 'all') {
+                        return typeof (c.condition == 'boolean')
+                    }
+                })
             }
+            arrayFiltered = filterArray();
             splitInPages();
             renderItems();
         }
 
         ///////////////////////
         // SortArray
-        function sortArray(clickCondition) {
-            arrayFiltered.sort(function (a, b) {
-                const itemA = a.item;
-                const itemB = b.item;
-                const sortSwitch = clickCondition;
-                if (sortSwitch) {
-                    return itemA - itemB
-                } else {
-                    return itemB - itemA
-                }
-            });
-            divButton.innerHTML = '';
+        localStorage.setItem('sort-condition', undefined);
+        function sortArray(ClickParam) {
+            localStorage.setItem('sort-condition', ClickParam);
+            const sortInLocalstorage = localStorage.getItem('sort-condition');
+            if (sortInLocalstorage != undefined) {
+                arrayFiltered.sort(function (a, b) {
+                    const itemA = a.item;
+                    const itemB = b.item;
+                    if (sortInLocalstorage == 'asc') {
+                        return itemA - itemB
+                    } else if (sortInLocalstorage == 'desc') {
+                        return itemB - itemA
+                    }
+                });
+            }
+            divButton.innerHTML = ''; // refresh buttons
             splitInPages();
             renderItems();
         }
