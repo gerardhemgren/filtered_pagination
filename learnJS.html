@@ -32,13 +32,13 @@
                     <button id="descending" onclick="sortArray('desc')">Descendente</button>
                 </div>
             </div>
+            <p>Páginas</p>
+            <div id="divButton"></div>
         </div>
     </div>
     <div id="canvasDiv"></div>
-    <div style="display: flex; flex-direction: column; justify-content: space-between;">
-        <div id="show-items"></div>
-        <div id="divButton" style="padding-top: 20px;"></div>
-    </div>
+    <div id="show-items"></div>
+
     <script>
 
         // CREATED (Array: [{item & condition]})
@@ -50,7 +50,6 @@
         const array = []; // Array to put items;
         const items = Math.floor(Math.random() * 100) + 1;
         const interval = Math.floor(Math.random() * 10) + 15;
-
         for (i = 0; i < items; i++) {
             const arrayBody = { item: `${(i * Math.floor(Math.random() * 10) + 1)}`, condition: false };
             if (arrayBody.item % 2 == 0) {
@@ -146,7 +145,6 @@
 
         ///////////////////////
         // Renders Items
-
         function renderItems(pageNumber) {
             if (!pageNumber) {
                 renderPageNumber = 1;
@@ -155,12 +153,15 @@
             }
             showItems.innerHTML = '';
             const items = document.createElement('div');
-            let currentPage = arrayFilteredInPages[renderPageNumber - 1].items;
-            for (i in currentPage) {
-                const eachItem = document.createElement('div');
-                eachItem.innerHTML = currentPage[i].item;
-                items.appendChild(eachItem);
-                eachItem.setAttribute('id', i);
+            let currentPage;
+            if (arrayFilteredInPages.length != 0) {
+            currentPage = arrayFilteredInPages[renderPageNumber - 1].items;
+                for (i in currentPage) {
+                    const eachItem = document.createElement('div');
+                    eachItem.innerHTML = currentPage[i].item;
+                    items.appendChild(eachItem);
+                    eachItem.setAttribute('id', i);
+                }
             }
             showItems.appendChild(items);
 
@@ -168,18 +169,20 @@
             const canvasDiv = document.getElementById('canvasDiv');
             canvasDiv.innerHTML = '';
             const canvasLines = document.createElement('canvas');
-            canvasLines.setAttribute('id','canvas');
-            canvasLines.setAttribute('width','200');
-            canvasLines.setAttribute('height','400');
+            canvasLines.setAttribute('id', 'canvas');
+            canvasLines.setAttribute('width', '200');
+            canvasLines.setAttribute('height', '450');
             canvasDiv.appendChild(canvasLines);
             const ctx = canvasLines.getContext('2d');
-            for (i in currentPage) {
-                let eachItem = document.getElementById(i);
-                ctx.beginPath();
-                ctx.moveTo(5, 100);
-                ctx.lineTo(200, (eachItem.getBoundingClientRect().bottom - 18));
-                ctx.strokeStyle = `#5${i}F`;
-                ctx.stroke();
+            if (arrayFilteredInPages) {
+                for (i in currentPage) {
+                    let eachItem = document.getElementById(i);
+                    ctx.beginPath();
+                    ctx.moveTo(5, 100);
+                    ctx.lineTo(200, (eachItem.getBoundingClientRect().bottom - 18));
+                    ctx.strokeStyle = `rgb(${90 + i * 3},${20 + i * 10},${150 + i * 10})`;
+                    ctx.stroke();
+                }
             }
             /////////
         }
