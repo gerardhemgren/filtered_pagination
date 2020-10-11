@@ -15,7 +15,7 @@
 </head>
 
 <body id="body" style="display: flex;  margin-top: 10px; padding: 0 40px;">
-    <div style="padding-right: 100px;">
+    <div>
         <div id="itemsNumber" style="font-size: 55px;"></div>
         <div id="intervalNumber" style="font-size: 55px;"></div>
         <div>
@@ -34,11 +34,11 @@
             </div>
         </div>
     </div>
+    <div id="canvasDiv"></div>
     <div style="display: flex; flex-direction: column; justify-content: space-between;">
         <div id="show-items"></div>
         <div id="divButton" style="padding-top: 20px;"></div>
     </div>
-
     <script>
 
         // CREATED (Array: [{item & condition]})
@@ -146,6 +146,7 @@
 
         ///////////////////////
         // Renders Items
+
         function renderItems(pageNumber) {
             if (!pageNumber) {
                 renderPageNumber = 1;
@@ -159,8 +160,28 @@
                 const eachItem = document.createElement('div');
                 eachItem.innerHTML = currentPage[i].item;
                 items.appendChild(eachItem);
+                eachItem.setAttribute('id', i);
             }
             showItems.appendChild(items);
+
+            //////// Lines in canvas
+            const canvasDiv = document.getElementById('canvasDiv');
+            canvasDiv.innerHTML = '';
+            const canvasLines = document.createElement('canvas');
+            canvasLines.setAttribute('id','canvas');
+            canvasLines.setAttribute('width','200');
+            canvasLines.setAttribute('height','400');
+            canvasDiv.appendChild(canvasLines);
+            const ctx = canvasLines.getContext('2d');
+            for (i in currentPage) {
+                let eachItem = document.getElementById(i);
+                ctx.beginPath();
+                ctx.moveTo(5, 100);
+                ctx.lineTo(200, (eachItem.getBoundingClientRect().bottom - 18));
+                ctx.strokeStyle = `#5${i}F`;
+                ctx.stroke();
+            }
+            /////////
         }
         renderItems();
 
