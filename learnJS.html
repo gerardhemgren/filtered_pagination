@@ -11,39 +11,45 @@
             color: white;
             font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
         }
+
+        .button-focus {
+            outline-style: none;
+            color: cyan;
+            border: 1px solid cyan;
+            border-radius: 5px;
+            background-color: transparent;
+        }
     </style>
 </head>
 
-<body id="body" style="display: flex;  margin-top: 10px; padding: 0 40px;">
+<body id="body" style="display: flex;  margin-top: 10px; padding: 0 60px;">
     <div>
         <div id="itemsNumber" style="font-size: 55px;"></div>
         <div id="intervalNumber" style="font-size: 55px;"></div>
         <div>
             <p>Filtrar</p>
-            <button id='filter' onclick="filter('even')">Pares</button>
-            <button id='filter' onclick="filter('odd')">Impares</button>
-            <button id='filter' onclick="filter('all')">Todos</button>
+            <div id="filterPanel">
+                <button id='filter' onclick="filter('even')">Pares</button>
+                <button id='filter' onclick="filter('odd')">Impares</button>
+                <button id='filter' onclick="filter('all')">Todos</button>
+            </div>
+
             <p>Ordenar</p>
-            <div style="display: flex;">
-                <div id="ascending">
-                    <button id="ascending" onclick="sortArray('asc')">Ascendente</button>
-                </div>
-                <div id="descending">
-                    <button id="descending" onclick="sortArray('desc')">Descendente</button>
-                </div>
+            <div id="sortPanel">
+                <button id="sort" onclick="sortArray('asc')">Ascendente</button>
+                <button id="sort" onclick="sortArray('desc')">Descendente</button>
             </div>
             <p>Páginas</p>
-            <div id="divButton"></div>
+            <div id="page-buttons"></div>
         </div>
     </div>
     <div id="canvasDiv"></div>
     <div id="show-items"></div>
 
     <script>
-
         // CREATED (Array: [{item & condition]})
         const showItems = document.getElementById('show-items');
-        const divButton = document.getElementById('divButton');
+        const divButton = document.getElementById('page-buttons');
         const itemsNumber = document.getElementById('itemsNumber');
         const intervalNumber = document.getElementById('intervalNumber');
 
@@ -58,14 +64,13 @@
             array.push(arrayBody);
         }
         itemsNumber.innerHTML = `Items: ${items}`;
-        intervalNumber.innerHTML = `Intervalo: ${interval}`;
+        intervalNumber.innerHTML = `Mostrar hasta: ${interval}`;
 
         ///////////////////////
         // FilterArray
         let arrayFiltered = array;
         function filter(filterParam) {
             arrayFiltered = array;
-            sortArray(localStorage.getItem('sort-condition'));
             function filterArray() {
                 return array.filter(c => {
                     if (filterParam == 'even') {
@@ -79,8 +84,7 @@
                 })
             }
             arrayFiltered = filterArray();
-            splitInPages();
-            renderItems();
+            sortArray(localStorage.getItem('sort-condition'));
         }
 
         ///////////////////////
@@ -134,11 +138,17 @@
 
         ///////////////////////
         // Creates Buttons
+        // let PBsiblingElements;
         function createButton(pageNumber) {
             const button = document.createElement('button');
             button.innerHTML = pageNumber;
+            button.setAttribute('id', `page-number-button-${pageNumber}`);
             button.addEventListener('click', function () {
-                renderItems(pageNumber)
+                renderItems(pageNumber);
+                for (b = 0; b < document.getElementById(`page-buttons`).children.length; b++) {
+                    document.getElementById(`page-buttons`).children[b].classList.remove('button-focus');
+                }
+                document.getElementById(`page-number-button-${pageNumber}`).classList.add('button-focus');
             })
             divButton.appendChild(button);
         }
@@ -155,7 +165,7 @@
             const items = document.createElement('div');
             let currentPage;
             if (arrayFilteredInPages.length != 0) {
-            currentPage = arrayFilteredInPages[renderPageNumber - 1].items;
+                currentPage = arrayFilteredInPages[renderPageNumber - 1].items;
                 for (i in currentPage) {
                     const eachItem = document.createElement('div');
                     eachItem.innerHTML = currentPage[i].item;
@@ -164,6 +174,7 @@
                 }
             }
             showItems.appendChild(items);
+            document.getElementById(`page-number-button-1`).classList.add('button-focus');
 
             //////// Lines in canvas
             const canvasDiv = document.getElementById('canvasDiv');
@@ -188,6 +199,24 @@
         }
         renderItems();
 
+        /////////////////////
+        // Focus category buttons
+        function setButtonClass() {
+            allButtons = document.getElementsByTagName('button');
+            for (i = 0; i < allButtons.length; i++) {
+                allButtons[i].addEventListener('click', function setFocus(self) {
+                    delFocusClass(self);
+                    self.path[0].classList.add('button-focus');
+                })
+            }
+        }
+        setButtonClass();
+        function delFocusClass(self) {
+            siblingElements = self.path[1].children
+            for (i = 0; i < siblingElements.length; i++) {
+                siblingElements[i].classList.remove('button-focus');
+            }
+        }
     </script>
 </body>
 
