@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>learnJS</title>
+    <title>Paginación</title>
     <style>
         body {
             background-color: rgb(30, 30, 60);
@@ -22,16 +22,16 @@
     </style>
 </head>
 
-<body id="body" style="display: flex;  margin-top: 10px; padding: 0 60px;">
+<body id="body" style="display: flex;  margin-top: 40px; padding: 0 60px;">
     <div>
         <div id="itemsNumber" style="font-size: 55px;"></div>
-        <div id="intervalNumber" style="font-size: 55px;"></div>
+        <div id="intervalNumber" style="font-size: 30px;"></div>
         <div>
             <p>Filtrar</p>
             <div id="filterPanel">
                 <button id='filter' onclick="filter('even')">Pares</button>
                 <button id='filter' onclick="filter('odd')">Impares</button>
-                <button id='filter' onclick="filter('all')">Todos</button>
+                <button id='filter' onclick="filter('all')" class="button-focus">Todos</button>
             </div>
 
             <p>Ordenar</p>
@@ -42,6 +42,9 @@
             <p>Páginas</p>
             <div id="page-buttons"></div>
         </div>
+        <br>
+        <p>Paginación dinámica con<br>opciones de filtrado/orden.</p>
+        <button onclick="window.location.reload()">Randomizar</button>
     </div>
     <div id="canvasDiv"></div>
     <div id="show-items"></div>
@@ -49,11 +52,11 @@
     <script>
         // CREATED (Array: [{item & condition]})
         const showItems = document.getElementById('show-items');
-        const divButton = document.getElementById('page-buttons');
+        const pageButton = document.getElementById('page-buttons');
         const itemsNumber = document.getElementById('itemsNumber');
         const intervalNumber = document.getElementById('intervalNumber');
 
-        const array = []; // Array to put items;
+        const array = []; // Array to fill with items;
         const items = Math.floor(Math.random() * 100) + 1;
         const interval = Math.floor(Math.random() * 10) + 15;
         for (i = 0; i < items; i++) {
@@ -63,11 +66,12 @@
             }
             array.push(arrayBody);
         }
-        itemsNumber.innerHTML = `Items: ${items}`;
-        intervalNumber.innerHTML = `Mostrar hasta: ${interval}`;
+        itemsNumber.innerHTML = `Números: ${items}`;
+        intervalNumber.innerHTML = `Mostrar ${interval} por página`;
+
 
         ///////////////////////
-        // FilterArray
+        // FilterArray Pares, Inpares, Todos
         let arrayFiltered = array;
         function filter(filterParam) {
             arrayFiltered = array;
@@ -90,10 +94,10 @@
         ///////////////////////
         // SortArray
         localStorage.setItem('sort-condition', undefined);
-        function sortArray(ClickParam) {
-            localStorage.setItem('sort-condition', ClickParam);
+        function sortArray(sortParam) {
+            localStorage.setItem('sort-condition', sortParam);
             const sortInLocalstorage = localStorage.getItem('sort-condition');
-            if (sortInLocalstorage != undefined) {
+            if (sortInLocalstorage != 'unsorted') {
                 arrayFiltered.sort(function (a, b) {
                     const itemA = a.item;
                     const itemB = b.item;
@@ -102,9 +106,9 @@
                     } else if (sortInLocalstorage == 'desc') {
                         return itemB - itemA
                     }
-                });
+                })
             }
-            divButton.innerHTML = ''; // refresh buttons
+            pageButton.innerHTML = ''; // refresh buttons
             splitInPages();
             renderItems();
         }
@@ -118,7 +122,7 @@
             arrayFilteredInPages = [];
             firstPoint = 0;
             lastPoint = interval;
-            divButton.innerHTML = '';
+            pageButton.innerHTML = '';
             //////////
             for (let pageN = 0; pageN < pageSplit; pageN++) {
                 let pageBody = { pageNumber: (pageN + 1), items: [] };
@@ -138,19 +142,20 @@
 
         ///////////////////////
         // Creates Buttons
-        // let PBsiblingElements;
         function createButton(pageNumber) {
             const button = document.createElement('button');
+            button.style.marginRight = '4px';
             button.innerHTML = pageNumber;
             button.setAttribute('id', `page-number-button-${pageNumber}`);
             button.addEventListener('click', function () {
                 renderItems(pageNumber);
+                /// ButtonPages Focus
                 for (b = 0; b < document.getElementById(`page-buttons`).children.length; b++) {
                     document.getElementById(`page-buttons`).children[b].classList.remove('button-focus');
                 }
                 document.getElementById(`page-number-button-${pageNumber}`).classList.add('button-focus');
             })
-            divButton.appendChild(button);
+            pageButton.appendChild(button);
         }
 
         ///////////////////////
@@ -178,20 +183,21 @@
 
             //////// Lines in canvas
             const canvasDiv = document.getElementById('canvasDiv');
+            canvasDiv.style.marginLeft = '40px';
             canvasDiv.innerHTML = '';
             const canvasLines = document.createElement('canvas');
             canvasLines.setAttribute('id', 'canvas');
-            canvasLines.setAttribute('width', '200');
-            canvasLines.setAttribute('height', '450');
+            canvasLines.setAttribute('width', '100');
+            canvasLines.setAttribute('height', '500');
             canvasDiv.appendChild(canvasLines);
             const ctx = canvasLines.getContext('2d');
             if (arrayFilteredInPages) {
                 for (i in currentPage) {
                     let eachItem = document.getElementById(i);
                     ctx.beginPath();
-                    ctx.moveTo(5, 100);
-                    ctx.lineTo(200, (eachItem.getBoundingClientRect().bottom - 18));
-                    ctx.strokeStyle = `rgb(${90 + i * 3},${20 + i * 10},${150 + i * 10})`;
+                    ctx.moveTo(-200, (eachItem.getBoundingClientRect().bottom - 8));
+                    ctx.lineTo(100, (eachItem.getBoundingClientRect().bottom - 48));
+                    ctx.strokeStyle = `rgb(${150 + i * 3},${90 + i * 10},${250 + i * 3})`;
                     ctx.stroke();
                 }
             }
@@ -200,7 +206,7 @@
         renderItems();
 
         /////////////////////
-        // Focus category buttons
+        // Focus category buttons ONLY
         function setButtonClass() {
             allButtons = document.getElementsByTagName('button');
             for (i = 0; i < allButtons.length; i++) {
