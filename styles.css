@@ -162,6 +162,7 @@ body {
 @media only screen and (max-width: 540px) {
     body {
         flex-direction: column;
+        padding: 0px;
     }
 
     .panel {
@@ -232,7 +233,7 @@ body {
     .items-list {
         grid-template-columns: repeat(2, 110px);
         gap: 10px;
-        top: 312px;
+        top: 320px;
     }
 
     .items-list div {
