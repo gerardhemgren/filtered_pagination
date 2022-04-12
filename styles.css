@@ -6,6 +6,7 @@ button {
     padding: 4px 8px;
     margin: 0 2px;
 }
+
 .button-focus {
     outline-style: none;
     color: black;
@@ -18,8 +19,8 @@ body {
     background-color: rgb(226, 226, 226);
     color: black;
     font-family: Arial, sans-serif;
-    display: flex;  
-    margin-top: 40px; 
+    display: flex;
+    margin-top: 40px;
     padding: 0 40px;
     font-size: 12px;
     display: flex;
@@ -31,55 +32,65 @@ body {
     display: flex;
     flex-direction: column;
 }
-    .total-container {
-        padding: 16px;
-        background-color: white;
-        border-radius: 8px;
-        display: flex;
-        flex-direction: column;
-        justify-items: center;
-        width: 180px;
-    }
-        .dashboard-container {
-            display: flex;
-            flex-direction: column;
-        }
-            .itemsNumber {
-                font-size: 80px;
-            }
-            .i-n-container {
-                margin-top: 8px;
-                align-self: flex-end;
-                text-align: end;
-            }
-                .intervalNumber {
-                    font-size: 24px;
-                }
-        .random-btn {
-            margin: 24px 0 0;
-            border-color: grey;
-        }
-    .menu {
-        padding: 16px;
-    }
-    .menu div {
-        padding-bottom: 12px;
-    }
 
-.items-list{
+.total-container {
+    padding: 16px;
+    background-color: white;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    justify-items: center;
+    width: 180px;
+}
+
+.dashboard-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.itemsNumber {
+    font-size: 80px;
+}
+
+.i-n-container {
+    margin-top: 8px;
+    align-self: flex-end;
+    text-align: end;
+}
+
+.intervalNumber {
+    font-size: 24px;
+}
+
+.random-btn {
+    margin: 24px 0 0;
+    border-color: grey;
+}
+
+.menu {
+    padding: 16px;
+}
+
+.menu div {
+    padding-bottom: 12px;
+}
+
+.items-list {
     font-size: 14px;
     display: grid;
     grid-template-columns: repeat(5, 100px);
     gap: 8px;
 }
-    .items-list div {
-        background-color: rgb(187, 255, 255);
-        border-radius: 8px;
-        padding: 4px;
-    }
+
+.items-list div {
+    background-color: rgb(187, 255, 255);
+    border-radius: 8px;
+    padding: 4px;
+    margin-bottom: 4px;
+}
 
 @media only screen and (max-width: 900px) {
-    .items-list{
+    .items-list {
         grid-template-columns: repeat(3, 100px);
     }
 }
@@ -89,51 +100,110 @@ body {
     body {
         flex-direction: column;
     }
-        .panel {
-            align-self: center;
-            flex-direction: row;
-            padding-bottom: 20px;
-            width: auto;
-        }
-            .total-container {
-                width: 180px;
-            }
-                .dashboard-container {
-                    flex-direction: column;
-                    justify-content: space-around;
-                }
-        .items-list{
-            grid-template-columns: repeat(3, 120px);
-            justify-content: center;
-        }
+
+    .panel {
+        align-self: center;
+        flex-direction: row;
+        gap: 12px;
+        padding-bottom: 20px;
+        width: auto;
+    }
+
+    .total-container {
+        width: 120px;
+    }
+
+    .dashboard-container {
+        flex-direction: column;
+        justify-content: space-around;
+    }
+
+    .random-btn {
+        margin: 18px 0 0;
+    }
+
+    .menu {
+        padding: 2px 16px;
+    }
+
+    .items-list {
+        grid-template-columns: repeat(3, 120px);
+        justify-content: center;
+    }
+    .items-list div{
+        height: 40px;
+    }
 }
 
 @media only screen and (max-width: 540px) {
     body {
         flex-direction: column;
     }
-        .panel {
-            align-self: center;
-            flex-direction: column;
-        }
-            .total-container {
-                width: 228px;
-            }
-                .dashboard-container {
-                    flex-direction: row;
-                    justify-content: space-around;
-                }
-                .itemsNumber {
-                    font-size: 40px;
-                }
-                .i-n-container {
-                    align-self: center;
-                    text-align: end;
-                }
-                    .intervalNumber {
-                        font-size: 20px;
-                    }
-        .items-list{
-            grid-template-columns: repeat(1, 220px);
-        }
+
+    .panel {
+        align-self: center;
+        flex-direction: column;
+        gap: 0px;
+        padding-bottom: 8px;
+    }
+
+    .total-container {
+        width: 228px;
+    }
+
+    .dashboard-container {
+        flex-direction: row;
+        justify-content: space-around;
+    }
+
+    .itemsNumber {
+        font-size: 40px;
+    }
+
+    .i-n-container {
+        align-self: center;
+        text-align: end;
+    }
+
+    .intervalNumber {
+        font-size: 20px;
+    }
+
+    .menu {
+        justify-items: center;
+    }
+
+    .menu p {
+        margin: 8px;
+    }
+
+    .menu div {
+        padding-bottom: 4px;
+        display: grid;
+    }
+
+    .menu div:nth-child(2) {
+        grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+    }
+
+    .menu div:nth-child(4) {
+        grid-template-columns: repeat(auto-fill, minmax(100px, 2fr));
+    }
+
+    .menu div:nth-child(6) {
+        grid-template-columns: repeat(auto-fill, minmax(40px, 2fr));
+    }
+
+    .menu div:nth-child(6) button {
+        padding-bottom: 4px;
+    }
+
+    .items-list {
+        grid-template-columns: repeat(2, 110px);
+        height: 100px;
+    }
+
+    .items-list div {
+        height: 40px;
+    }
 }

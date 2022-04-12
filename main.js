@@ -92,7 +92,7 @@
  // Creates Buttons
  function createButton(pageNumber) {
      const button = document.createElement('button');
-     button.style.marginRight = '4px';
+     button.style.margin = '0px 4px 8px 2px';
      button.innerHTML = pageNumber;
      button.setAttribute('id', `page-number-button-${pageNumber}`);
      button.addEventListener('click', function () {
