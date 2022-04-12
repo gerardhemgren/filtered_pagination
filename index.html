@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en" style="height: 100%;">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paginación</title>
+    <style>
+        body {
+            background-color: rgb(30, 30, 60);
+            color: white;
+            font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+        }
+
+        .button-focus {
+            outline-style: none;
+            color: cyan;
+            border: 1px solid cyan;
+            border-radius: 5px;
+            background-color: transparent;
+        }
+    </style>
+</head>
+
+<body id="body" style="display: flex;  margin-top: 40px; padding: 0 60px;">
+    <div>
+        <div id="itemsNumber" style="font-size: 55px;"></div>
+        <div id="intervalNumber" style="font-size: 30px;"></div>
+        <div>
+            <p>Filtrar</p>
+            <div id="filterPanel">
+                <button id='filter' onclick="filter('even')">Pares</button>
+                <button id='filter' onclick="filter('odd')">Impares</button>
+                <button id='filter' onclick="filter('all')" class="button-focus">Todos</button>
+            </div>
+
+            <p>Ordenar</p>
+            <div id="sortPanel">
+                <button id="sort" onclick="sortArray('asc')">Ascendente</button>
+                <button id="sort" onclick="sortArray('desc')">Descendente</button>
+            </div>
+            <p>Páginas</p>
+            <div id="page-buttons"></div>
+        </div>
+        <br>
+        <p>Paginación dinámica con<br>opciones de filtrado/orden.</p>
+        <button onclick="window.location.reload()">Randomizar</button>
+    </div>
+    <div id="canvasDiv"></div>
+    <div id="show-items"></div>
+
+    <script>
+        // CREATED (Array: [{item & condition]})
+        const showItems = document.getElementById('show-items');
+        const pageButton = document.getElementById('page-buttons');
+        const itemsNumber = document.getElementById('itemsNumber');
+        const intervalNumber = document.getElementById('intervalNumber');
+
+        const array = []; // Array to fill with items;
+        const items = Math.floor(Math.random() * 100) + 1;
+        const interval = Math.floor(Math.random() * 10) + 15;
+        for (i = 0; i < items; i++) {
+            const arrayBody = { item: `${(i * Math.floor(Math.random() * 10) + 1)}`, condition: false };
+            if (arrayBody.item % 2 == 0) {
+                arrayBody.condition = true;
+            }
+            array.push(arrayBody);
+        }
+        itemsNumber.innerHTML = `Números: ${items}`;
+        intervalNumber.innerHTML = `Mostrar ${interval} por página`;
+
+
+        ///////////////////////
+        // FilterArray Pares, Inpares, Todos
+        let arrayFiltered = array;
+        function filter(filterParam) {
+            arrayFiltered = array;
+            function filterArray() {
+                return array.filter(c => {
+                    if (filterParam == 'even') {
+                        return c.condition === true;
+                    }
+                    else if (filterParam == 'odd') {
+                        return c.condition === false;
+                    } else if (filterParam == 'all') {
+                        return typeof (c.condition == 'boolean')
+                    }
+                })
+            }
+            arrayFiltered = filterArray();
+            sortArray(localStorage.getItem('sort-condition'));
+        }
+
+        ///////////////////////
+        // SortArray
+        localStorage.setItem('sort-condition', undefined);
+        function sortArray(sortParam) {
+            localStorage.setItem('sort-condition', sortParam);
+            const sortInLocalstorage = localStorage.getItem('sort-condition');
+            if (sortInLocalstorage != 'unsorted') {
+                arrayFiltered.sort(function (a, b) {
+                    const itemA = a.item;
+                    const itemB = b.item;
+                    if (sortInLocalstorage == 'asc') {
+                        return itemA - itemB
+                    } else if (sortInLocalstorage == 'desc') {
+                        return itemB - itemA
+                    }
+                })
+            }
+            pageButton.innerHTML = ''; // refresh buttons
+            splitInPages();
+            renderItems();
+        }
+
+        ///////////////////////
+        // PageSplit
+        let arrayFilteredInPages = [];
+        function splitInPages() {
+            // refresh
+            let pageSplit = Math.ceil(arrayFiltered.length / interval);
+            arrayFilteredInPages = [];
+            firstPoint = 0;
+            lastPoint = interval;
+            pageButton.innerHTML = '';
+            //////////
+            for (let pageN = 0; pageN < pageSplit; pageN++) {
+                let pageBody = { pageNumber: (pageN + 1), items: [] };
+                arrayFilteredInPages.push(pageBody);
+                for (; firstPoint < lastPoint; firstPoint++) {
+                    if (firstPoint == arrayFiltered.length) { break; }
+                    const itemBody = { item: '', condition: '' };
+                    itemBody.item = arrayFiltered[firstPoint].item;
+                    itemBody.condition = arrayFiltered[firstPoint].condition;
+                    pageBody.items.push(itemBody);
+                }
+                lastPoint += interval;
+                createButton(arrayFilteredInPages[pageN].pageNumber);
+            }
+        }
+        splitInPages();
+
+        ///////////////////////
+        // Creates Buttons
+        function createButton(pageNumber) {
+            const button = document.createElement('button');
+            button.style.marginRight = '4px';
+            button.innerHTML = pageNumber;
+            button.setAttribute('id', `page-number-button-${pageNumber}`);
+            button.addEventListener('click', function () {
+                renderItems(pageNumber);
+                /// ButtonPages Focus
+                for (b = 0; b < document.getElementById(`page-buttons`).children.length; b++) {
+                    document.getElementById(`page-buttons`).children[b].classList.remove('button-focus');
+                }
+                document.getElementById(`page-number-button-${pageNumber}`).classList.add('button-focus');
+            })
+            pageButton.appendChild(button);
+        }
+
+        ///////////////////////
+        // Renders Items
+        function renderItems(pageNumber) {
+            if (!pageNumber) {
+                renderPageNumber = 1;
+            } else {
+                renderPageNumber = pageNumber;
+            }
+            showItems.innerHTML = '';
+            const items = document.createElement('div');
+            let currentPage;
+            if (arrayFilteredInPages.length != 0) {
+                currentPage = arrayFilteredInPages[renderPageNumber - 1].items;
+                for (i in currentPage) {
+                    const eachItem = document.createElement('div');
+                    eachItem.innerHTML = currentPage[i].item;
+                    items.appendChild(eachItem);
+                    eachItem.setAttribute('id', i);
+                }
+            }
+            showItems.appendChild(items);
+            document.getElementById(`page-number-button-1`).classList.add('button-focus');
+
+            //////// Lines in canvas
+            const canvasDiv = document.getElementById('canvasDiv');
+            canvasDiv.style.marginLeft = '40px';
+            canvasDiv.innerHTML = '';
+            const canvasLines = document.createElement('canvas');
+            canvasLines.setAttribute('id', 'canvas');
+            canvasLines.setAttribute('width', '100');
+            canvasLines.setAttribute('height', '500');
+            canvasDiv.appendChild(canvasLines);
+            const ctx = canvasLines.getContext('2d');
+            if (arrayFilteredInPages) {
+                for (i in currentPage) {
+                    let eachItem = document.getElementById(i);
+                    ctx.beginPath();
+                    ctx.moveTo(-200, (eachItem.getBoundingClientRect().bottom - 8));
+                    ctx.lineTo(100, (eachItem.getBoundingClientRect().bottom - 48));
+                    ctx.strokeStyle = `rgb(${150 + i * 3},${90 + i * 10},${250 + i * 3})`;
+                    ctx.stroke();
+                }
+            }
+            /////////
+        }
+        renderItems();
+
+        /////////////////////
+        // Focus category buttons ONLY
+        function setButtonClass() {
+            allButtons = document.getElementsByTagName('button');
+            for (i = 0; i < allButtons.length; i++) {
+                allButtons[i].addEventListener('click', function setFocus(self) {
+                    delFocusClass(self);
+                    self.path[0].classList.add('button-focus');
+                })
+            }
+        }
+        setButtonClass();
+        function delFocusClass(self) {
+            siblingElements = self.path[1].children
+            for (i = 0; i < siblingElements.length; i++) {
+                siblingElements[i].classList.remove('button-focus');
+            }
+        }
+    </script>
+</body>
+
+</html>
