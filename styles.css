@@ -1,12 +1,3 @@
-body {
-    background-color: rgb(226, 226, 226);
-    color: black;
-    font-family: Arial, sans-serif;
-    display: flex;  
-    margin-top: 40px; 
-    padding: 0 40px;
-    font-size: 12px;
-}
 button {
     cursor: pointer;
     border-style: none;
@@ -22,36 +13,127 @@ button {
     border-radius: 5px;
     background-color: rgb(187, 255, 255);
 }
-.total-container {
-    padding: 16px;
-    background-color: white;
-    border-radius: 8px;
+
+body {
+    background-color: rgb(226, 226, 226);
+    color: black;
+    font-family: Arial, sans-serif;
+    display: flex;  
+    margin-top: 40px; 
+    padding: 0 40px;
+    font-size: 12px;
+    display: flex;
+    flex-direction: row;
+}
+
+.panel {
+    width: 260px;
     display: flex;
     flex-direction: column;
-    justify-items: center;
-    width: 180px;
 }
-    .itemsNumber {
-        font-size: 80px;
+    .total-container {
+        padding: 16px;
+        background-color: white;
+        border-radius: 8px;
+        display: flex;
+        flex-direction: column;
+        justify-items: center;
+        width: 180px;
     }
-    .i-n-container {
-        margin-top: 8px;
-        align-self: flex-end;
-        text-align: end;
-    }
-        .intervalNumber {
-            font-size: 24px;
+        .dashboard-container {
+            display: flex;
+            flex-direction: column;
         }
+            .itemsNumber {
+                font-size: 80px;
+            }
+            .i-n-container {
+                margin-top: 8px;
+                align-self: flex-end;
+                text-align: end;
+            }
+                .intervalNumber {
+                    font-size: 24px;
+                }
         .random-btn {
             margin: 24px 0 0;
             border-color: grey;
         }
-.menu {
-    padding: 16px;
-}
-.canvas {
-    padding-right: 4px;
-}
+    .menu {
+        padding: 16px;
+    }
+    .menu div {
+        padding-bottom: 12px;
+    }
+
 .items-list{
     font-size: 14px;
+    display: grid;
+    grid-template-columns: repeat(5, 100px);
+    gap: 8px;
+}
+    .items-list div {
+        background-color: rgb(187, 255, 255);
+        border-radius: 8px;
+        padding: 4px;
+    }
+
+@media only screen and (max-width: 900px) {
+    .items-list{
+        grid-template-columns: repeat(3, 100px);
+    }
+}
+
+
+@media only screen and (max-width: 700px) {
+    body {
+        flex-direction: column;
+    }
+        .panel {
+            align-self: center;
+            flex-direction: row;
+            padding-bottom: 20px;
+            width: auto;
+        }
+            .total-container {
+                width: 180px;
+            }
+                .dashboard-container {
+                    flex-direction: column;
+                    justify-content: space-around;
+                }
+        .items-list{
+            grid-template-columns: repeat(3, 120px);
+            justify-content: center;
+        }
+}
+
+@media only screen and (max-width: 540px) {
+    body {
+        flex-direction: column;
+    }
+        .panel {
+            align-self: center;
+            flex-direction: column;
+        }
+            .total-container {
+                width: 228px;
+            }
+                .dashboard-container {
+                    flex-direction: row;
+                    justify-content: space-around;
+                }
+                .itemsNumber {
+                    font-size: 40px;
+                }
+                .i-n-container {
+                    align-self: center;
+                    text-align: end;
+                }
+                    .intervalNumber {
+                        font-size: 20px;
+                    }
+        .items-list{
+            grid-template-columns: repeat(1, 220px);
+        }
 }

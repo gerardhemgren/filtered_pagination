@@ -115,41 +115,17 @@
          renderPageNumber = pageNumber;
      }
      itemList.innerHTML = '';
-     const items = document.createElement('div');
      let currentPage;
      if (arrayFilteredInPages.length != 0) {
          currentPage = arrayFilteredInPages[renderPageNumber - 1].items;
          for (i in currentPage) {
              const eachItem = document.createElement('div');
              eachItem.innerHTML = currentPage[i].item;
-             items.appendChild(eachItem);
+             itemList.appendChild(eachItem);
              eachItem.setAttribute('id', i);
          }
      }
-     itemList.appendChild(items);
      document.getElementById(`page-number-button-1`).classList.add('button-focus');
-
-     //////// Lines in canvas
-     const canvasDiv = document.getElementById('canvasDiv');
-     canvasDiv.style.marginLeft = '40px';
-     canvasDiv.innerHTML = '';
-     const canvasLines = document.createElement('canvas');
-     canvasLines.setAttribute('id', 'canvas');
-     canvasLines.setAttribute('width', '100');
-     canvasLines.setAttribute('height', '500');
-     canvasDiv.appendChild(canvasLines);
-     const ctx = canvasLines.getContext('2d');
-     if (arrayFilteredInPages) {
-         for (i in currentPage) {
-             let eachItem = document.getElementById(i);
-             ctx.beginPath();
-             ctx.moveTo(-200, (eachItem.getBoundingClientRect().bottom - 8));
-             ctx.lineTo(100, (eachItem.getBoundingClientRect().bottom - 48));
-             ctx.strokeStyle = `rgb(${30 + i * 3},${30 + i * 3},${100 + i * 3})`;
-             ctx.stroke();
-         }
-     }
-     /////////
  }
  renderItems();
 

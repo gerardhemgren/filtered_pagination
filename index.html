@@ -9,15 +9,17 @@
 </head>
 
 <body id="body">
-    <div>
+    <div class="panel">
         <div class="total-container">
-            <div class="a-cotainer">
-                Amount
-                <div id="itemsNumber" class="itemsNumber"></div>
-            </div>
-            <div class="i-n-container">
-                <div id="intervalNumber" class="intervalNumber"></div>
-                per page
+            <div class="dashboard-container">
+                <div>
+                    Amount
+                    <div id="itemsNumber" class="itemsNumber"></div>
+                </div>
+                <div class="i-n-container">
+                    <div id="intervalNumber" class="intervalNumber"></div>
+                    per page
+                </div>
             </div>
             <button class="random-btn" onclick="window.location.reload()">Randomize</button>
         </div>
@@ -28,7 +30,6 @@
                 <button id='filter' onclick="filter('odd')">Odds</button>
                 <button id='filter' onclick="filter('all')" class="button-focus">All</button>
             </div>
-
             <p>Order by</p>
             <div id="sortPanel">
                 <button id="sort" onclick="sortArray('asc')">Ascending</button>
@@ -38,7 +39,6 @@
             <div id="page-buttons"></div>
         </div>
     </div>
-    <div id="canvasDiv" class="canvas"></div>
     <div id="items-list" class="items-list"></div>
 
     <script src="main.js"></script>
