@@ -5,8 +5,10 @@ const itemsNumber = document.getElementById('itemsNumber');
 const intervalNumber = document.getElementById('intervalNumber');
 
 const array = []; // Array to fill with items;
-const items = Math.floor(Math.random() * 100) + 1;
+const items = Math.floor(Math.random() * 100);
 const interval = Math.floor(Math.random() * 10) + 15;
+itemsNumber.innerHTML = items;
+intervalNumber.innerHTML = interval;
 for (i = 0; i < items; i++) {
     const arrayBody = { item: `${(i * Math.floor(Math.random() * 10) + 1)}`, condition: false };
     if (arrayBody.item % 2 == 0) {
@@ -14,19 +16,22 @@ for (i = 0; i < items; i++) {
     }
     array.push(arrayBody);
 }
-itemsNumber.innerHTML = items;
-intervalNumber.innerHTML = interval;
+array.shift() // removes the first element that's always 1
 
 
 ///////////////////////
-// FilterArray Pares, Inpares, Todos
+// Filter & Sort with reset
 let arrayFiltered = array;
 localStorage.setItem('filter-condition', 'reset');
+localStorage.setItem('sort-condition', 'reset');
 let filterInLocalStorage;
-function filter(filterParam) {
+let sortInLocalStorage;
+function filterAndSort(filter, sort) {
     arrayFiltered = array;
+    sort !== '' ? localStorage.setItem('sort-condition', sort) : 'reset';
+    filter !== '' ? localStorage.setItem('filter-condition', filter) : 'reset';
+
     function filterArray() {
-        localStorage.setItem('filter-condition', filterParam);
         filterInLocalStorage = localStorage.getItem('filter-condition');
         return arrayFiltered.filter(c => {
             if (filterInLocalStorage == 'even') {
@@ -35,39 +40,28 @@ function filter(filterParam) {
             else if (filterInLocalStorage == 'odd') {
                 return c.condition === false;
             } else if (filterInLocalStorage == 'reset') {
-                return typeof (c.condition == 'boolean')
+                return typeof (c.condition == 'boolean');
             }
         })
     }
-    arrayFiltered = filterArray();
-    pageButton.innerHTML = ''; // refresh buttons
-    splitInPages();
-    renderItems();
-}
 
-///////////////////////
-// SortArray
-localStorage.setItem('sort-condition', 'reset');
-let sortInLocalStorage;
-function sortArray(sortParam) {
-    localStorage.setItem('sort-condition', sortParam);
-    sortInLocalStorage = localStorage.getItem('sort-condition');
-    if (sortInLocalStorage !== 'reset') {
-        arrayFiltered.sort(function (a, b) {
-            const itemA = a.item;
-            const itemB = b.item;
-            if (sortInLocalStorage == 'asc') {
-                return itemA - itemB
-            } else if (sortInLocalStorage == 'desc') {
-                return itemB - itemA
-            }
-            filterInLocalStorage = localStorage.getItem('filter-condition');
-            filter(filterInLocalStorage)
-        })
-    } else {
-        filterInLocalStorage = localStorage.getItem('filter-condition');
-        filter(filterInLocalStorage)
+    function sortArray() {
+        sortInLocalStorage = localStorage.getItem('sort-condition');
+        if (sortInLocalStorage !== 'reset') {
+            return arrayFiltered.sort(function (a, b) {
+                if (sortInLocalStorage == 'asc') {
+                    return a.item - b.item;
+                } else if (sortInLocalStorage == 'desc') {
+                    return b.item - a.item;
+                }
+            })
+        } else {
+            return arrayFiltered;
+        }
     }
+
+    arrayFiltered = filterArray();
+    arrayFiltered = sortArray();
     pageButton.innerHTML = ''; // refresh buttons
     splitInPages();
     renderItems();
@@ -137,7 +131,7 @@ function renderItems(pageNumber) {
             eachItem.setAttribute('id', i);
         }
     }
-    document.getElementById(`page-number-button-1`).classList.add('button-focus');
+    document.getElementById(`page-number-button-1`) ? document.getElementById(`page-number-button-1`).classList.add('button-focus') : null;
 }
 renderItems();
 

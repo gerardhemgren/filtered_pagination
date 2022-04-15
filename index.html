@@ -26,15 +26,15 @@
         <div class="menu">
             <p>Filter</p>
             <div id="filterPanel">
-                <button id='filter' onclick="{filter('even'); showResetBtn('filter')}">Evens</button>
-                <button id='filter' onclick="{filter('odd'); showResetBtn('filter')}">Odds</button>
-                <button id='filter' name="filter-btn" onclick="{filter('reset'), hideResetBtn('filter')}">X</button>
+                <button id='filter' onclick="{filterAndSort('even',''); showResetBtn('filter')}">Evens</button>
+                <button id='filter' onclick="{filterAndSort('odd',''); showResetBtn('filter')}">Odds</button>
+                <button id='filter' name="filter-btn" onclick="{filterAndSort('reset',''), hideResetBtn('filter')}">X</button>
             </div>
             <p>Order by</p>
             <div id="sortPanel">
-                <button id="sort" onclick="{sortArray('asc'); showResetBtn('sort')}">Ascending</button>
-                <button id="sort" onclick="{sortArray('desc'); showResetBtn('sort')}">Descending</button>
-                <button id="sort" name="sort-btn" onclick="{sortArray('reset'); hideResetBtn('sort')}">X</button>
+                <button id="sort" onclick="{filterAndSort('','asc'); showResetBtn('sort')}">Ascending</button>
+                <button id="sort" onclick="{filterAndSort('','desc'); showResetBtn('sort')}">Descending</button>
+                <button id="sort" name="sort-btn" onclick="{filterAndSort('','reset'); hideResetBtn('sort')}">X</button>
             </div>
             <p>Pages</p>
             <div id="page-buttons"></div>
