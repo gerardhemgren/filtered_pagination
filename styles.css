@@ -28,7 +28,7 @@ body {
 }
 
 .panel {
-    width: 220px;
+    width: 280px;
     display: flex;
     flex-direction: column;
     position: fixed;
@@ -172,6 +172,7 @@ body {
         top: 0;
         padding-top: 20px;
         padding-bottom: 8px;
+        width: 260px;
     }
 
     .total-container {
@@ -219,7 +220,12 @@ body {
     }
 
     .menu div:nth-child(4) {
-        grid-template-columns: repeat(auto-fill, minmax(100px, 2fr));
+        grid-template-columns: repeat(auto-fill, minmax(60px, 2fr));
+        font-size: 10px;
+    }
+
+    .menu div:nth-child(4) button {
+        font-size: 10px;
     }
 
     .menu div:nth-child(6) {
@@ -229,6 +235,11 @@ body {
     .menu div:nth-child(6) button {
         padding-bottom: 4px;
     }
+
+    .menu div:nth-child(6) button::after {
+        border: 1px solid white;
+    }
+
 
     .items-list {
         grid-template-columns: repeat(2, 110px);
