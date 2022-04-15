@@ -26,14 +26,15 @@
         <div class="menu">
             <p>Filter</p>
             <div id="filterPanel">
-                <button id='filter' onclick="filter('even')">Evens</button>
-                <button id='filter' onclick="filter('odd')">Odds</button>
-                <button id='filter' onclick="filter('all')" class="button-focus">All</button>
+                <button id='filter' onclick="{filterAndSort('even',''); showResetBtn('filter')}">Evens</button>
+                <button id='filter' onclick="{filterAndSort('odd',''); showResetBtn('filter')}">Odds</button>
+                <button id='filter' name="filter-btn" onclick="{filterAndSort('reset',''), hideResetBtn('filter')}">X</button>
             </div>
             <p>Order by</p>
             <div id="sortPanel">
-                <button id="sort" onclick="sortArray('asc')">Ascending</button>
-                <button id="sort" onclick="sortArray('desc')">Descending</button>
+                <button id="sort" onclick="{filterAndSort('','asc'); showResetBtn('sort')}">Ascending</button>
+                <button id="sort" onclick="{filterAndSort('','desc'); showResetBtn('sort')}">Descending</button>
+                <button id="sort" name="sort-btn" onclick="{filterAndSort('','reset'); hideResetBtn('sort')}">X</button>
             </div>
             <p>Pages</p>
             <div id="page-buttons"></div>
