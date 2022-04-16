@@ -150,7 +150,15 @@ body {
     }
 
     .menu {
-        padding: 0 16px;    
+        padding: 0 16px;
+    }
+
+    .menu p {
+        margin: 8px;
+    }
+
+    .menu div {
+        padding-bottom: 4px;
     }
 
     .items-list {
@@ -164,7 +172,7 @@ body {
 }
 
 /* tablet */
-@media only screen and (max-width: 870px) and (min-height: 550px){
+@media only screen and (max-width: 870px) and (min-height: 550px) {
     body {
         flex-direction: column;
         padding: 0px;
@@ -271,7 +279,6 @@ body {
 
     .menu div:nth-child(4) {
         grid-template-columns: repeat(auto-fill, minmax(30%, 2fr));
-        /* font-size: 1em; */
     }
 
     .menu div:nth-child(4) button {
