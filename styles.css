@@ -97,9 +97,9 @@ body {
 }
 
 /* desktop */
-@media only screen and (max-width: 1080px) {
+@media only screen and (max-width: 1090px) {
     .items-list {
-        grid-template-columns: repeat(5, 100px);
+        grid-template-columns: repeat(6, 100px);
     }
 
     .items-list div {
@@ -107,7 +107,7 @@ body {
     }
 }
 
-@media only screen and (max-width: 900px) {
+@media only screen and (max-width: 990px) {
     .items-list {
         grid-template-columns: repeat(5, 100px);
     }
@@ -172,7 +172,7 @@ body {
 }
 
 /* tablet */
-@media only screen and (max-width: 870px) and (min-height: 550px) {
+@media only screen and (max-width: 880px) and (min-height: 550px) {
     body {
         flex-direction: column;
         padding: 0px;
